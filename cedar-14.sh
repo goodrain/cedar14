@@ -75,6 +75,9 @@ apt-get install -y --force-yes \
 ln -s /lib/x86_64-linux-gnu/libz.so.1 /lib/
 ln -s /usr/lib/x86_64-linux-gnu/libfreetype.so.6 /usr/lib/
 ln -s /usr/lib/x86_64-linux-gnu/libjpeg.so.62 /usr/lib/
+ln -s /usr/local/lib/libmemcached.so.10  /usr/lib/
+
+
 
 # 解决php-5.3编译依赖问题
 ln -s /usr/lib/x86_64-linux-gnu/libXpm.a /usr/lib/libXpm.a
