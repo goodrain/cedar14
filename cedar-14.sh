@@ -69,13 +69,13 @@ apt-get install -y --force-yes \
     language-pack-zh-hans \
     language-pack-zh-hant \
     language-pack-en \
-    libmemcached-dev
+    libmemcached-dev \
+    libmemcached10
 
 # 解决python的PIL包无法找到lib问题
 ln -s /lib/x86_64-linux-gnu/libz.so.1 /lib/
 ln -s /usr/lib/x86_64-linux-gnu/libfreetype.so.6 /usr/lib/
 ln -s /usr/lib/x86_64-linux-gnu/libjpeg.so.62 /usr/lib/
-ln -s /usr/local/lib/libmemcached.so.10  /usr/lib/
 
 
 
