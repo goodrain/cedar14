@@ -2,7 +2,7 @@
 set -xe
 
 image_name="cedar14"
-release_ver=$1
+release_ver=${$1:-latest}
 
 trap 'clean_tmp; exit' QUIT TERM EXIT
 
@@ -15,7 +15,7 @@ function clean_tmp() {
 function release(){
 
   branch_name="master"
-  release_ver="latest"
+
   
   git checkout master
 
@@ -23,8 +23,8 @@ function release(){
   release_desc=master-`git rev-parse --short master`
   sed  "s/__RELEASE_DESC__/$release_desc/" Dockerfile > Dockerfile.template
   
-  docker build -t rainbond/${image_name} -f Dockerfile.template .
-  docker push rainbond/${image_name}
+  docker build -t rainbond/${image_name}:${release_ver} -f Dockerfile.template .
+  docker push rainbond/${image_name}:${release_ver}
 }
 
 #=== main ===
