@@ -68,9 +68,7 @@ apt-get install -y --force-yes \
     libsasl2-dev \
     language-pack-zh-hans \
     language-pack-zh-hant \
-    language-pack-en \
-    libmemcached-dev \
-    libmemcached10
+    language-pack-en
 
 # 解决python的PIL包无法找到lib问题
 ln -s /lib/x86_64-linux-gnu/libz.so.1 /lib/
