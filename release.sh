@@ -2,6 +2,7 @@
 set -xe
 
 image_name="cedar14"
+release_ver=$1
 
 trap 'clean_tmp; exit' QUIT TERM EXIT
 
