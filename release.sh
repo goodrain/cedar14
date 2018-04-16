@@ -22,8 +22,8 @@ function release(){
   release_desc=master-`git rev-parse --short master`
   sed  "s/__RELEASE_DESC__/$release_desc/" Dockerfile > Dockerfile.template
   
-  docker build -t hub.goodrain.com/dc-deploy/${image_name} -f Dockerfile.template .
-  docker push hub.goodrain.com/dc-deploy/${image_name}
+  docker build -t rainbond/${image_name} -f Dockerfile.template .
+  docker push rainbond/${image_name}
 }
 
 #=== main ===
