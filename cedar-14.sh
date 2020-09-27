@@ -4,22 +4,28 @@ exec 2>&1
 set -e
 set -x
 
-# 使用sohu镜像
+# 使用阿里镜像源
 cat > /etc/apt/sources.list <<EOF
-deb http://mirrors.aliyun.com/ubuntu trusty main
-deb http://mirrors.aliyun.com/ubuntu trusty-security main
-deb http://mirrors.aliyun.com/ubuntu trusty-updates main
-deb http://mirrors.aliyun.com/ubuntu trusty universe
+deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
 EOF
 
+# 安装软件
 apt-get update
-apt-get install -y --force-yes \
+apt-get install -y --no-install-recommends --no-install-suggests --force-yes \
     autoconf \
     bind9-host \
     bison \
     build-essential \
     coreutils \
-    curl \
     daemontools \
     dnsutils \
     ed \
@@ -43,32 +49,33 @@ apt-get install -y --force-yes \
     libffi6 \
     libffi-dev \
     netcat-openbsd \
-    openjdk-7-jdk \
-    openjdk-7-jre-headless \
     openssh-client \
     openssh-server \
-    postgresql-server-dev-9.3 \
+    postgresql \
     python \
     python-dev \
-    python-imaging \
     ruby \
     ruby-dev \
     socat \
     iperf \
     syslinux \
     tar \
+    inetutils-ping \
     telnet \
-    zip vim curl \
+    zip \
+    vim \
+    wget \
     zlib1g-dev \
     libsqlite3-dev \
     libfreetype6-dev \
-    libpng12-dev \
-    libXpm-dev \
     freetds-dev \
     libsasl2-dev \
     language-pack-zh-hans \
     language-pack-zh-hant \
-    language-pack-en
+    language-pack-en \
+    tzdata \
+    cron
+
 
 # 解决python的PIL包无法找到lib问题
 ln -s /lib/x86_64-linux-gnu/libz.so.1 /lib/
@@ -76,12 +83,18 @@ ln -s /usr/lib/x86_64-linux-gnu/libfreetype.so.6 /usr/lib/
 ln -s /usr/lib/x86_64-linux-gnu/libjpeg.so.62 /usr/lib/
 
 
-
 # 解决php-5.3编译依赖问题
 ln -s /usr/lib/x86_64-linux-gnu/libXpm.a /usr/lib/libXpm.a
 ln -s /usr/lib/x86_64-linux-gnu/libXpm.so /usr/lib/libXpm.so
 ln -s /usr/include/freetype2 /usr/include/freetype2/freetype
+# 解决php找不到libreadline库问题
+ln -s /lib/x86_64-linux-gnu/libreadline.so.7.0  /lib/x86_64-linux-gnu/libreadline.so.6
+# 解决php编译 'CURL_OPENSSL_3' not found 问题
+apt-get install --no-install-recommends --no-install-suggests  -y software-properties-common
+add-apt-repository ppa:xapienz/curl34
+apt-get install  --no-install-recommends --no-install-suggests  -y  curl libcurl4
 
+# 清理
 cd /
 rm -rf /var/cache/apt/archives/*.deb
 rm -rf /root/*
@@ -115,18 +128,9 @@ function pruned_find() {
 pruned_find -perm /u+s | xargs -r chmod u-s
 pruned_find -perm /g+s | xargs -r chmod g-s
 
-# remove non-root ownership of files
-chown root:root /var/lib/libuuid
 
 # display build summary
 set +x
-echo -e "\nRemaining suspicious security bits:"
-(
-  pruned_find ! -user root
-  pruned_find -perm /u+s
-  pruned_find -perm /g+s
-  pruned_find -perm /+t
-) | sed -u "s/^/  /"
 
 echo -e "\nInstalled versions:"
 (
