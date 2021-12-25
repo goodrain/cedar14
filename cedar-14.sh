@@ -4,28 +4,24 @@ exec 2>&1
 set -e
 set -x
 
-# 使用sohu镜像
-cat > /etc/apt/sources.list <<EOF
-deb http://mirrors.aliyun.com/ubuntu trusty main
-deb http://mirrors.aliyun.com/ubuntu trusty-security main
-deb http://mirrors.aliyun.com/ubuntu trusty-updates main
-deb http://mirrors.aliyun.com/ubuntu trusty universe
-EOF
+# 使用阿里云镜像
+sed -i -e 's/ports.ubuntu.com/mirrors.aliyun.com/g' \
+    -e 's/archive.ubuntu.com/mirrors.aliyun.com/g' \
+    -e 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list \
+    && apt-get update
 
-apt-get update
+if [ $(arch) == "x86_64" ];then
 apt-get install -y --force-yes \
     autoconf \
     bind9-host \
     bison \
     build-essential \
     coreutils \
-    curl \
     daemontools \
     dnsutils \
     ed \
     git \
     imagemagick \
-    iputils-tracepath \
     language-pack-en \
     libbz2-dev \
     libcurl4-openssl-dev \
@@ -43,21 +39,13 @@ apt-get install -y --force-yes \
     libffi6 \
     libffi-dev \
     netcat-openbsd \
-    openjdk-7-jdk \
-    openjdk-7-jre-headless \
     openssh-client \
     openssh-server \
-    postgresql-server-dev-9.3 \
-    python \
-    python-dev \
     python-imaging \
     ruby \
     ruby-dev \
-    socat \
-    iperf \
     syslinux \
     tar \
-    telnet \
     zip vim curl \
     zlib1g-dev \
     libsqlite3-dev \
@@ -69,6 +57,53 @@ apt-get install -y --force-yes \
     language-pack-zh-hans \
     language-pack-zh-hant \
     language-pack-en
+elif [ $(arch) == "aarch64" ];then
+apt-get install -y --force-yes \
+    autoconf \
+    bind9-host \
+    bison \
+    build-essential \
+    coreutils \
+    daemontools \
+    dnsutils \
+    ed \
+    git \
+    imagemagick \
+    language-pack-en \
+    libbz2-dev \
+    libcurl4-openssl-dev \
+    libevent-dev \
+    libglib2.0-dev \
+    libjpeg-dev \
+    libmysqlclient-dev \
+    libncurses5-dev \
+    libpq-dev \
+    libpq5 \
+    libreadline6-dev \
+    libssl-dev \
+    libxml2-dev \
+    libxslt-dev \
+    libffi6 \
+    libffi-dev \
+    openssh-client \
+    openssh-server \
+    python-imaging \
+    syslinux-common \
+    ruby \
+    ruby-dev \
+    tar \
+    zip vim curl \
+    zlib1g-dev \
+    libsqlite3-dev \
+    libfreetype6-dev \
+    libpng12-dev \
+    libXpm-dev \
+    freetds-dev \
+    libsasl2-dev \
+    language-pack-zh-hans \
+    language-pack-zh-hant \
+    language-pack-en
+fi
 
 # 解决python的PIL包无法找到lib问题
 ln -s /lib/x86_64-linux-gnu/libz.so.1 /lib/
