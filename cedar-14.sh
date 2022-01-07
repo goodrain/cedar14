@@ -56,7 +56,10 @@ apt-get install -y --force-yes \
     libsasl2-dev \
     language-pack-zh-hans \
     language-pack-zh-hant \
-    language-pack-en
+    language-pack-en \
+    libmcrypt-dev \
+    libmcrypt4 \
+    libmemcached10
 elif [ $(arch) == "aarch64" ];then
 apt-get install -y --force-yes \
     autoconf \
@@ -102,20 +105,25 @@ apt-get install -y --force-yes \
     libsasl2-dev \
     language-pack-zh-hans \
     language-pack-zh-hant \
-    language-pack-en
+    language-pack-en \
+    libmcrypt-dev \
+    libmcrypt4 \
+    libmemcached10
 fi
 
 # 解决python的PIL包无法找到lib问题
-ln -s /lib/x86_64-linux-gnu/libz.so.1 /lib/
-ln -s /usr/lib/x86_64-linux-gnu/libfreetype.so.6 /usr/lib/
-ln -s /usr/lib/x86_64-linux-gnu/libjpeg.so.62 /usr/lib/
+ln -s /lib/$(arch)-linux-gnu/libz.so.1 /lib/
+ln -s /usr/lib/$(arch)-linux-gnu/libfreetype.so.6 /usr/lib/
+ln -s /usr/lib/$(arch)-linux-gnu/libjpeg.so.62 /usr/lib/
 
 
 
 # 解决php-5.3编译依赖问题
-ln -s /usr/lib/x86_64-linux-gnu/libXpm.a /usr/lib/libXpm.a
-ln -s /usr/lib/x86_64-linux-gnu/libXpm.so /usr/lib/libXpm.so
+ln -s /usr/lib/$(arch)-linux-gnu/libXpm.a /usr/lib/libXpm.a
+ln -s /usr/lib/$(arch)-linux-gnu/libXpm.so /usr/lib/libXpm.so
 ln -s /usr/include/freetype2 /usr/include/freetype2/freetype
+
+
 
 cd /
 rm -rf /var/cache/apt/archives/*.deb
