@@ -108,7 +108,9 @@ apt-get install -y --force-yes \
     language-pack-en \
     libmcrypt-dev \
     libmcrypt4 \
-    libmemcached10
+    libmemcached10 \
+    libmagickwand-dev \
+    libmagickcore-dev 
 fi
 
 # 解决python的PIL包无法找到lib问题
